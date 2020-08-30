@@ -50,18 +50,15 @@ local function bench(func, iterations, benchName) -- Note: only works with funct
   local x
 
   for i = 1,metaIterations do
+    logger.writeTemp(progressReporter(i))
     local resultTime, result = helper() -- Haha compiler optimization goes brrrrrrr
 
     timeCounter = timeCounter + resultTime
     x = result
-
-    logger.writeTemp(progressReporter(i))
   end
 
-  logger.writeLine('')
-
   local time = (timeCounter) / iterations
-  local logString = string.format("Time for %s: %s", benchName, package.timeString(time))
+  local logString = string.format("Time for '%s': %s", benchName, package.timeString(time))
 
   logger.writeLine(logString)
 

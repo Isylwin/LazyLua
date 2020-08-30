@@ -12,10 +12,25 @@ local function nats(k)
   return co
 end
 
-local function predicatedSequence(s, pred)
+
+local function odds(k)
+  local x = k or 1
+  if x%2 == 0 then error("Cannot start odd sequence with even number!") end
+
   local co = coroutine.wrap(function ()
     while true do
-      local x = s()
+      coroutine.yield(x)
+      x = x + 2
+    end
+  end)
+
+  return co
+end
+
+
+local function predicatedSequence(s, pred)
+  local co = coroutine.wrap(function ()
+    for x in s do
       if pred(x) then coroutine.yield(x) end
     end
   end)
@@ -33,7 +48,8 @@ local function fetchNfromSequence(n, seq)
   return result
 end
 
-sequenceUtil.naturalNumbers = nats
+sequenceUtil.nats = nats
+sequenceUtil.odds = odds
 sequenceUtil.predicatedSequence = predicatedSequence
 sequenceUtil.fetchNfromSequence = fetchNfromSequence
 
